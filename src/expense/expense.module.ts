@@ -6,7 +6,12 @@ import {
 } from '@nestjs/common';
 import { ExpenseService } from './expense.service';
 import { ExpenseController } from './expense.controller';
-import { deviceChecker, timeZone, userInfo } from './middleware';
+import {
+  deviceChecker,
+  permitionHandler,
+  timeZone,
+  userInfo,
+} from './middleware';
 
 @Module({
   controllers: [ExpenseController],
@@ -15,7 +20,13 @@ import { deviceChecker, timeZone, userInfo } from './middleware';
 export class ExpenseModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(timeZone, deviceChecker, userInfo)
+      .apply(userInfo, deviceChecker, timeZone)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer
+      .apply(permitionHandler)
+      .forRoutes(
+        { path: '*', method: RequestMethod.GET },
+        { path: '*', method: RequestMethod.POST },
+      );
   }
 }
