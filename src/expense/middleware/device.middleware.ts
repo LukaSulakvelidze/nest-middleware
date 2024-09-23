@@ -14,8 +14,8 @@ export class deviceChecker implements NestMiddleware {
     const userAgent = req.headers['user-agent'];
     const device = deviceDetector.parse(userAgent);
     if (device.device?.type === 'desktop') next();
-    else
+    else {
       throw new HttpException('Unauthorized access', HttpStatus.UNAUTHORIZED);
-    next();
+    }
   }
 }
